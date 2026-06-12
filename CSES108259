@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<title>我的1A2B猜數字遊戲</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    text-align:center;
+    background: linear-gradient(to right,#74ebd5,#ACB6E5);
+}
+
+.container{
+    width:500px;
+    margin:auto;
+    margin-top:50px;
+    background:white;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 0 10px gray;
+}
+
+input{
+    padding:10px;
+    font-size:20px;
+    width:120px;
+}
+
+button{
+    padding:10px 20px;
+    font-size:18px;
+    margin:5px;
+    cursor:pointer;
+}
+
+#history{
+    text-align:left;
+    margin-top:20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>🎯 我的1A2B猜數字遊戲 🎯</h1>
+
+    <p>請輸入4個不重複數字</p>
+
+    <input type="text" id="guess" maxlength="4">
+
+    <button onclick="checkGuess()">猜看看</button>
+    <button onclick="restartGame()">重新開始</button>
+
+    <h2 id="result"></h2>
+
+    <div id="history"></div>
+</div>
+
+<script>
+
+let answer = generateAnswer();
+
+function generateAnswer(){
+    let nums = [];
+
+    while(nums.length < 4){
+        let n = Math.floor(Math.random()*10);
+
+        if(!nums.includes(n)){
+            nums.push(n);
+        }
+    }
+
+    return nums.join('');
+}
+
+function checkGuess(){
+
+    let guess = document.getElementById("guess").value;
+
+    if(!/^\d{4}$/.test(guess)){
+        alert("請輸入4位數字！");
+        return;
+    }
+
+    let set = new Set(guess);
+
+    if(set.size !== 4){
+        alert("數字不可重複！");
+        return;
+    }
+
+    let A = 0;
+    let B = 0;
+
+    for(let i=0;i<4;i++){
+
+        if(guess[i] === answer[i]){
+            A++;
+        }
+        else if(answer.includes(guess[i])){
+            B++;
+        }
+    }
+
+    let msg = `${guess} ➜ ${A}A${B}B`;
+
+    document.getElementById("history").innerHTML += msg + "<br>";
+
+    if(A === 4){
+        document.getElementById("result").innerHTML =
+        "🎉 恭喜過關！答案是：" + answer;
+    }
+
+    document.getElementById("guess").value="";
+}
+
+function restartGame(){
+    answer = generateAnswer();
+    document.getElementById("history").innerHTML="";
+    document.getElementById("result").innerHTML="";
+}
+
+</script>
+
+</body>
+</html>
